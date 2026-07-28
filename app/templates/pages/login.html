@@ -1,11 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST</title>
-</head>
-<body>
-    <h1>TEST</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Transit Verify - Login{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="login-layout relative z-20">
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo Section -->
+            <div class="login-logo">
+                <img alt="Transit Verify Logo"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDQNv58IohE1fAYjLrsCaFBaMSqZUI-jdVpzFk4XkG4PQtHbkALIOjds4e_T4cGhndoiqBT717eVaooR0oq_IDBSke2HnU0ggrQ0fsRwYKukgHtNu_x-1hygE6Kc1eZhZPD9n3WPvoozkuIyFGHbIhRmJwDvBQQT_SrjvPiWuL85-X5zMuLe8u1u6FzG2UZolSt3gN1NMB2kMtGQv96VTeWXZSXUV-BN3dtglu4bCRd3MNokSKoyOjx4WNKpAr3tw4pBZuxmC-oct-">
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" onsubmit="event.preventDefault(); window.location.href='/dashboard';">
+                <div class="login-header">
+                    <h1 class="font-display">Secure Login</h1>
+                    <p class="font-body-md text-on-surface-variant">Authorized personnel only.</p>
+                </div>
+
+                <div class="form-group">
+                    <!-- Email Input -->
+                    <div class="input-container">
+                        <div class="input-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <input class="form-input" id="email" name="email" placeholder="Official Email Address" required
+                            type="email">
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="input-container">
+                        <div class="input-icon">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <input class="form-input has-right-icon" id="password" name="password" placeholder="Password"
+                            required type="password">
+                        <div class="input-action" onclick="togglePassword()">
+                            <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="btn-primary font-label-md" type="submit">
+                    LOG IN
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer Text -->
+        <div class="login-footer">
+            <p class="font-label-md text-on-surface-variant">
+                Transit Verify — AARTB Enforcement Platform
+            </p>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

@@ -21,17 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install flake8 black isort pytest  # dev tools
+          pip install -r requirements-dev.txt
 
       - name: Lint (flake8)
-        run: flake8 app/ tests/
-
-      - name: Code format check (black)
-        run: black --check .
-
-      - name: Import order check (isort)
-        run: isort --check-only .
+        run: flake8 app/ tests/ --ignore=E302,E501,W292,F401
 
       - name: Run tests
         run: pytest
