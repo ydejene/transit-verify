@@ -1,0 +1,77 @@
+/* =============================================================
+   login.css — Styles scoped to the login page only
+   Depends on CSS variables defined in main.css (:root)
+   ============================================================= */
+
+/* --- Page layout ------------------------------------------- */
+.login-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: var(--spacing-margin-page);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* --- Card -------------------------------------------------- */
+.login-card {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: var(--spacing-padding-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Logo -------------------------------------------------- */
+.login-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.login-logo img {
+    height: 6rem;
+    width: auto;
+    object-fit: contain;
+}
+
+/* --- Form -------------------------------------------------- */
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.login-header h1 {
+    margin: 0;
+    color: var(--color-primary-container);
+}
+
+.login-header p {
+    margin: 0.25rem 0 0 0;
+}
+
+/* --- Footer ----------------------------------------------- */
+.login-footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.login-footer p {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}

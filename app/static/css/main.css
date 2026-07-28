@@ -1,0 +1,230 @@
+/* =============================================================
+   main.css — Global design tokens, resets, and shared primitives
+   Each page loads its own CSS on top of this)
+   ============================================================= */
+
+/* --- Design tokens ----------------------------------------- */
+:root {
+    /* Full colour palette */
+    --color-on-secondary-container:      #00743a;
+    --color-on-error-container:          #93000a;
+    --color-on-primary:                  #ffffff;
+    --color-inverse-primary:             #afc8f0;
+    --color-primary-container:           #001f3f;
+    --color-surface-variant:             #e1e3e4;
+    --color-secondary-fixed:             #6bfe9c;
+    --color-tertiary-container:          #391303;
+    --color-on-tertiary-container:       #b5785f;
+    --color-primary:                     #000613;
+    --color-inverse-on-surface:          #f0f1f2;
+    --color-surface-bright:              #f8f9fa;
+    --color-secondary-fixed-dim:         #4ae183;
+    --color-error-container:             #ffdad6;
+    --color-on-tertiary-fixed-variant:   #6b3a25;
+    --color-on-tertiary:                 #ffffff;
+    --color-surface-container-high:      #e7e8e9;
+    --color-surface-tint:                #476083;
+    --color-outline-variant:             #c4c6cf;
+    --color-surface:                     #f8f9fa;
+    --color-outline:                     #74777f;
+    --color-on-error:                    #ffffff;
+    --color-on-secondary-fixed-variant:  #005228;
+    --color-on-primary-container:        #6f88ad;
+    --color-surface-container-highest:   #e1e3e4;
+    --color-secondary:                   #006d37;
+    --color-surface-container-lowest:    #ffffff;
+    --color-tertiary:                    #110200;
+    --color-on-tertiary-fixed:           #351002;
+    --color-on-primary-fixed:            #001c3a;
+    --color-primary-fixed-dim:           #afc8f0;
+    --color-on-surface:                  #191c1d;
+    --color-on-secondary:                #ffffff;
+    --color-secondary-container:         #6bfe9c;
+    --color-inverse-surface:             #2e3132;
+    --color-tertiary-fixed:              #ffdbce;
+    --color-background:                  #f8f9fa;
+    --color-surface-container:           #edeeef;
+    --color-on-surface-variant:          #43474e;
+    --color-error:                       #ba1a1a;
+    --color-on-primary-fixed-variant:    #2f486a;
+    --color-surface-dim:                 #d9dadb;
+    --color-tertiary-fixed-dim:          #fdb69a;
+    --color-on-background:               #191c1d;
+    --color-surface-container-low:       #f3f4f5;
+    --color-on-secondary-fixed:          #00210c;
+    --color-primary-fixed:               #d4e3ff;
+
+    /* Border radius */
+    --border-radius-default: 0.125rem;
+    --border-radius-lg:      0.25rem;
+    --border-radius-xl:      0.5rem;
+    --border-radius-full:    0.75rem;
+
+    /* Spacing */
+    --spacing-margin-page:       2rem;
+    --spacing-padding-card:      1.5rem;
+    --spacing-container-max:     1280px;
+    --spacing-gutter:            1rem;
+    --spacing-filter-bar-height: 4rem;
+
+    /* Typography */
+    --font-family-base: 'Inter', sans-serif;
+}
+
+/* --- Global reset & base ----------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Typography helpers ------------------------------------ */
+.font-display {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+}
+
+.font-headline-md {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+}
+
+.font-headline-sm {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.font-body-lg {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+}
+
+.font-body-md {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.font-label-md {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+/* --- Shared colour utilities ------------------------------- */
+.text-primary-container  { color: var(--color-primary-container); }
+.text-on-surface         { color: var(--color-on-surface); }
+.text-on-surface-variant { color: var(--color-on-surface-variant); }
+.text-on-primary         { color: var(--color-on-primary); }
+.text-secondary          { color: var(--color-secondary); }
+.text-error              { color: var(--color-error); }
+
+/* --- Shared form primitives -------------------------------- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-left: 0.75rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: var(--color-outline);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--border-radius-default);
+    background-color: var(--color-surface-container-lowest);
+    color: var(--color-on-surface);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary-container);
+    box-shadow: 0 0 0 1px var(--color-primary-container);
+}
+
+.form-input.has-right-icon {
+    padding-right: 2.5rem;
+}
+
+.input-action {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding-right: 0.75rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--color-outline);
+    transition: color 0.2s;
+}
+
+.input-action:hover {
+    color: var(--color-primary-container);
+}
+
+/* --- Shared button primitives ------------------------------ */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1.25rem;
+    background-color: var(--color-primary-container);
+    color: var(--color-on-primary);
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #00152b;
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-background),
+                0 0 0 4px var(--color-primary-container);
+}
+
+.btn-primary.full-width {
+    width: 100%;
+}
