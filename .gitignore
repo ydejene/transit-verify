@@ -1,0 +1,22 @@
+# Virtual environment (Crucial!)
+.venv/
+venv/
+env/
+ENV/
+
+# Flask instance folder (Contains your local private config.py with secrets)
+instance/
+
+# Python cache files
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.vscode/
+.idea/
