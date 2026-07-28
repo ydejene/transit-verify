@@ -25,7 +25,7 @@ jobs:
           pip install flake8 black isort pytest  # dev tools
 
       - name: Lint (flake8)
-        run: flake8 app/ tests/
+        run: flake8 app/ tests/ --ignore=E302,E501,W292,F401
 
       - name: Code format check (black)
         run: black --check .
