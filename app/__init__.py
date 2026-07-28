@@ -1,6 +1,8 @@
 import os
 from flask import Flask
-from app.routes import auth, dashboard, mobile, ussd, simple
+
+# from app.routes import auth, dashboard, mobile, ussd, simple
+from app.routes import simple
 
 
 def create_app():
