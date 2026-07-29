@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %}Transit Verify Anomaly Ledger{%
+endblock %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/components/navbar.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
+{% endblock %} {% block content %} {% include "components/navbar.html" %}
+
+<!-- ========================================================
+     Main Canvas
+     ======================================================== -->
+<main class="dashboard-main">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="font-headline-md">Anomaly Ledger</h1>
+    <p class="font-body-lg text-on-surface-variant">
+      Real-time transit violation monitoring
+    </p>
+  </div>
+
+  {% include "components/filter_bar.html" %} {% include
+  "components/anomaly_table.html" %}
+</main>
+
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

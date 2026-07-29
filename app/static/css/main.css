@@ -1,6 +1,6 @@
 /* =============================================================
    main.css — Global design tokens, resets, and shared primitives
-   Each page loads its own CSS on top of this)
+   Each page loads its own CSS on top of this
    ============================================================= */
 
 /* --- Design tokens ----------------------------------------- */
@@ -118,6 +118,12 @@ body {
 .font-body-md {
     font-size: 14px;
     line-height: 20px;
+    font-weight: 400;
+}
+
+.font-data-tabular {
+    font-size: 13px;
+    line-height: 18px;
     font-weight: 400;
 }
 

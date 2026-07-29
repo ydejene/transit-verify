@@ -1,0 +1,77 @@
+<!-- Expects anomalies, current_user, total_anomalies_count, current_page, total_pages, has_previous, has_next in context -->
+
+<!-- Stats Card -->
+<div class="stats-card">
+  <span class="stats-card-label">Total Anomalies</span>
+  <span class="stats-card-value">{{ total_anomalies_count }}</span>
+</div>
+
+<div class="table-wrapper">
+  <div class="table-scroll">
+    <table class="anomaly-table">
+      <thead>
+        <tr>
+          <th>Plate Number</th>
+          <th>Zone</th>
+          <th>Route</th>
+          <th>Violation Type</th>
+          <th>Report Count</th>
+          <th>Time Flagged</th>
+          <th>Status</th>
+          <th>Receipt Ref</th>
+          {% if current_user.role == "Supervisor" %}
+          <th>Updated By</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for anomaly in anomalies %}
+        <tr>
+          <td class="td-plate">{{ anomaly.vehiclePlate }}</td>
+          <td>{{ anomaly.terminalZone }}</td>
+          <td>{{ anomaly.routeSegment }}</td>
+          <td class="td-violation">{{ anomaly.violationType }}</td>
+          <td><code>{{ anomaly.reportCount }}</code></td>
+          <td class="td-time">{{ anomaly.windowStart }}</td>
+          <td>
+            <span class="status-badge status-badge--{{ anomaly.status|lower }}"
+              >{{ anomaly.status }}</span
+            >
+          </td>
+          <td class="td-receipt">{{ anomaly.penaltyReceiptRef or "—" }}</td>
+          {% if current_user.role == "Supervisor" %}
+          <td>
+            <div class="td-updated-by">
+              {% if anomaly.updated_by_full_name %}
+              <span>{{ anomaly.updated_by_full_name }}</span>
+              <span class="updated-at">{{ anomaly.updated_at }}</span>
+              {% else %}
+              <span class="system-note">System Generated</span>
+              <span class="updated-at">{{ anomaly.windowStart }}</span>
+              {% endif %}
+            </div>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-bar">
+    <span
+      >Showing 1 to {{ anomalies|length }} of {{ total_anomalies_count }}
+      entries</span
+    >
+    <div class="pagination-controls">
+      <button class="pagination-btn" {{ "disabled" if not has_previous }}>Previous</button>
+
+      {% for page_num in range(1, total_pages + 1) %}
+      <button class="pagination-btn{{ ' pagination-btn--active' if page_num == current_page }}">{{ page_num }}</button>
+      {% endfor %}
+
+      <button class="pagination-btn" {{ "disabled" if not has_next }}>Next</button>
+    </div>
+  </div>
+</div>

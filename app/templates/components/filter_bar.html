@@ -1,0 +1,81 @@
+<!-- Static markup — wired to real filter state once the query endpoint exists -->
+<div class="filter-bar">
+  <!-- Row 1: Search, Zone, Status, Time Slot -->
+  <div class="filter-row">
+    <div class="filter-field filter-field--grow">
+      <label class="filter-label">Search</label>
+      <div class="filter-search-wrapper">
+        <span class="material-symbols-outlined filter-search-icon">search</span>
+        <input
+          class="filter-input filter-input--search"
+          type="text"
+          placeholder="Search by plate number..."
+        />
+      </div>
+    </div>
+
+    <div class="filter-field filter-field--fixed">
+      <label class="filter-label">Zone</label>
+      <select class="filter-select">
+        <option>All</option>
+        <option>Megenagna</option>
+        <option>Bole</option>
+        <option>Saris</option>
+        <option>Asko</option>
+        <option>Tor Hailoch</option>
+      </select>
+    </div>
+
+    <div class="filter-field filter-field--fixed">
+      <label class="filter-label">Status</label>
+      <select class="filter-select">
+        <option selected>Pending</option>
+        <option>Reviewed</option>
+        <option>Resolved</option>
+        <option>All</option>
+      </select>
+    </div>
+
+    <div class="filter-field filter-field--fixed">
+      <label class="filter-label">Time Slot</label>
+      <select class="filter-select">
+        <option>All</option>
+        <option>Morning (6AM–12PM)</option>
+        <option>Afternoon (12PM–6PM)</option>
+        <option>Evening (6PM–12AM)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Row 2: Date Preset, From, To, Apply -->
+  <div class="filter-row">
+    <div class="filter-field filter-field--fixed">
+      <label class="filter-label">Date Preset</label>
+      <select class="filter-select">
+        <option selected>Today</option>
+        <option>This Week</option>
+        <option>This Month</option>
+        <option>All Time</option>
+      </select>
+    </div>
+
+    <div class="filter-field filter-field--grow">
+      <label class="filter-label">From</label>
+      <input class="filter-input" type="date" />
+    </div>
+
+    <div class="filter-field filter-field--grow">
+      <label class="filter-label">To</label>
+      <input class="filter-input" type="date" />
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn-apply-filter">
+        <span class="material-symbols-outlined" style="font-size: 18px"
+          >filter_list</span
+        >
+        Apply
+      </button>
+    </div>
+  </div>
+</div>
