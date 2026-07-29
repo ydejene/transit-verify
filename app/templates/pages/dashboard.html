@@ -1,244 +1,31 @@
-{% extends "base.html" %}
-
-{% block title %}Transit Verify — Anomaly Ledger{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-{% endblock %}
-
-{% block content %}
-
-<!-- ========================================================
-     Top Navigation Bar
-     ======================================================== -->
-<nav class="navbar">
-    <div class="navbar-inner">
-
-        <!-- Brand -->
-        <div class="navbar-brand">
-            <img alt="Transit Verify Logo"
-                src="#">
-            <span class="navbar-brand-name">Transit Verify</span>
-        </div>
-
-        <!-- User info & Logout -->
-        <div class="navbar-actions">
-            <div class="navbar-user-info">
-                <span class="navbar-user-name">Abebe Kebede</span>
-                <span class="navbar-user-role">Supervisor</span>
-            </div>
-            <div class="navbar-avatar">
-                <img alt="User avatar"
-                    src="#">
-            </div>
-            <button class="navbar-logout-btn" aria-label="Logout">
-                <span class="material-symbols-outlined">logout</span>
-            </button>
-        </div>
-
-    </div>
-</nav>
+{% extends "base.html" %} {% block title %}Transit Verify Anomaly Ledger{%
+endblock %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/components/navbar.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
+{% endblock %} {% block content %} {% include "components/navbar.html" %}
 
 <!-- ========================================================
      Main Canvas
      ======================================================== -->
 <main class="dashboard-main">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="font-headline-md">Anomaly Ledger</h1>
+    <p class="font-body-lg text-on-surface-variant">
+      Real-time transit violation monitoring
+    </p>
+  </div>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <h1 class="font-display">Anomaly Ledger</h1>
-        <p class="font-body-lg text-on-surface-variant">Real-time transit violation monitoring</p>
-    </div>
-
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <!-- Row 1: Search, Zone, Status, Time Slot -->
-        <div class="filter-row">
-            <div class="filter-field filter-field--grow">
-                <label class="filter-label">Search</label>
-                <div class="filter-search-wrapper">
-                    <span class="material-symbols-outlined filter-search-icon">search</span>
-                    <input class="filter-input filter-input--search" type="text" placeholder="Search by plate number...">
-                </div>
-            </div>
-
-            <div class="filter-field filter-field--fixed">
-                <label class="filter-label">Zone</label>
-                <select class="filter-select">
-                    <option>All</option>
-                    <option>Megenagna</option>
-                    <option>Bole</option>
-                    <option>Saris</option>
-                    <option>Asko</option>
-                    <option>Tor Hailoch</option>
-                </select>
-            </div>
-
-            <div class="filter-field filter-field--fixed">
-                <label class="filter-label">Status</label>
-                <select class="filter-select">
-                    <option selected>Pending</option>
-                    <option>Reviewed</option>
-                    <option>Resolved</option>
-                    <option>All</option>
-                </select>
-            </div>
-
-            <div class="filter-field filter-field--fixed">
-                <label class="filter-label">Time Slot</label>
-                <select class="filter-select">
-                    <option>All</option>
-                    <option>Morning (6AM–12PM)</option>
-                    <option>Afternoon (12PM–6PM)</option>
-                    <option>Evening (6PM–12AM)</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Row 2: Date Preset, From, To, Apply -->
-        <div class="filter-row">
-            <div class="filter-field filter-field--fixed">
-                <label class="filter-label">Date Preset</label>
-                <select class="filter-select">
-                    <option selected>Today</option>
-                    <option>This Week</option>
-                    <option>This Month</option>
-                    <option>All Time</option>
-                </select>
-            </div>
-
-            <div class="filter-field filter-field--grow">
-                <label class="filter-label">From</label>
-                <input class="filter-input" type="date">
-            </div>
-
-            <div class="filter-field filter-field--grow">
-                <label class="filter-label">To</label>
-                <input class="filter-input" type="date">
-            </div>
-
-            <div class="filter-actions">
-                <button class="btn-apply-filter">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">filter_list</span>
-                    Apply
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Card -->
-    <div class="stats-card">
-        <span class="stats-card-label">Total Anomalies</span>
-        <span class="stats-card-value">47</span>
-    </div>
-
-    <!-- Anomaly Table -->
-    <div class="table-wrapper">
-        <div class="table-scroll">
-            <table class="anomaly-table">
-                <thead>
-                    <tr>
-                        <th>Plate Number</th>
-                        <th>Zone</th>
-                        <th>Route</th>
-                        <th>Violation Type</th>
-                        <th>Report Count</th>
-                        <th>Time Flagged</th>
-                        <th>Status</th>
-                        <th>Receipt Ref</th>
-                        <th>Updated By</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Row 1 -->
-                    <tr>
-                        <td class="td-plate">AA-4592</td>
-                        <td>Addis Ketema</td>
-                        <td>Merkato - Piassa</td>
-                        <td class="td-violation">Overcharging</td>
-                        <td><code>3</code></td>
-                        <td class="td-time">10/24/23 08:10 AM</td>
-                        <td><span class="status-badge status-badge--resolved">Resolved</span></td>
-                        <td class="td-receipt">R-892341</td>
-                        <td>
-                            <div class="td-updated-by">
-                                <span>a.kebede@transit.gov.et</span>
-                                <span class="updated-at">10/24/23 08:15 AM</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 2 -->
-                    <tr>
-                        <td class="td-plate">AA-2184</td>
-                        <td>Bole</td>
-                        <td>Bole - Megenagna</td>
-                        <td class="td-violation">Route Deviation</td>
-                        <td><code>1</code></td>
-                        <td class="td-time">10/24/23 09:20 AM</td>
-                        <td><span class="status-badge status-badge--reviewed">Reviewed</span></td>
-                        <td class="td-receipt">—</td>
-                        <td>
-                            <div class="td-updated-by">
-                                <span>m.tesfaye@transit.gov.et</span>
-                                <span class="updated-at">10/24/23 09:30 AM</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 3 -->
-                    <tr>
-                        <td class="td-plate">AA-7731</td>
-                        <td>Lideta</td>
-                        <td>Lideta - Jemo</td>
-                        <td class="td-violation">Overcrowding</td>
-                        <td><code>5</code></td>
-                        <td class="td-time">10/24/23 10:05 AM</td>
-                        <td><span class="status-badge status-badge--pending">Pending</span></td>
-                        <td class="td-receipt">—</td>
-                        <td>
-                            <div class="td-updated-by">
-                                <span class="system-note">System Generated</span>
-                                <span class="updated-at">10/24/23 10:05 AM</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Row 4 -->
-                    <tr>
-                        <td class="td-plate">AA-1102</td>
-                        <td>Addis Ketema</td>
-                        <td>Addis Ketema - Shiro Meda</td>
-                        <td class="td-violation">Overcharging</td>
-                        <td><code>2</code></td>
-                        <td class="td-time">10/24/23 11:10 AM</td>
-                        <td><span class="status-badge status-badge--resolved">Resolved</span></td>
-                        <td class="td-receipt">R-892350</td>
-                        <td>
-                            <div class="td-updated-by">
-                                <span>a.kebede@transit.gov.et</span>
-                                <span class="updated-at">10/24/23 11:20 AM</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination-bar">
-            <span>Showing 1 to 4 of 124 entries</span>
-            <div class="pagination-controls">
-                <button class="pagination-btn" disabled>Previous</button>
-                <button class="pagination-btn pagination-btn--active">1</button>
-                <button class="pagination-btn">2</button>
-                <button class="pagination-btn">3</button>
-                <button class="pagination-btn">Next</button>
-            </div>
-        </div>
-    </div>
-
+  {% include "components/filter_bar.html" %} {% include
+  "components/anomaly_table.html" %}
 </main>
 
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

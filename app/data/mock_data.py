@@ -1,12 +1,4 @@
-"""
-Temporary stand-in for the real anomaly_service/database layer.
-
-Shape matches the anomalies table (see docs/erd.md) plus the joined
-`updated_by` user fields the dashboard needs to display. Once
-app/services/anomaly_service.py is implemented, the routes import from
-there instead of here — templates do not change, since they only depend
-on this shape, not on where it comes from.
-"""
+"""Temporary stand-in for anomaly_service/DB layer — shape matches the anomalies table (docs/erd.md)."""
 
 MOCK_ANOMALIES = [
     {

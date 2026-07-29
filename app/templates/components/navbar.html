@@ -1,0 +1,27 @@
+<!-- Expects current_user { full_name, role } in context -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <!-- Brand -->
+    <div class="navbar-brand">
+      <img
+        src="{{ url_for('static', filename='img/logo.svg') }}"
+        alt="Transit Verify logo"
+      />
+    </div>
+
+    <!-- User info & Logout -->
+    <div class="navbar-actions">
+      <div class="navbar-user-info">
+        <span class="navbar-user-name">{{ current_user.full_name }}</span>
+        <span class="navbar-user-role">{{ current_user.role }}</span>
+      </div>
+      {% set name_parts = current_user.full_name.split() %}
+      <div class="navbar-avatar avatar-initials" aria-hidden="true">
+        {{ name_parts[0][0] }}{{ name_parts[-1][0] }}
+      </div>
+      <button class="navbar-logout-btn" aria-label="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </div>
+  </div>
+</nav>
