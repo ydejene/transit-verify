@@ -12,6 +12,9 @@ Flask + Jinja2 (server-rendered, no frontend framework) + SQLite.
 ## Setup
 
 ```bash
+git clone https://github.com/ydejene/transit-verify
+cd transit-verify
+
 python -m venv .venv
 .venv\Scripts\activate          # Windows
 source .venv/bin/activate       # macOS/Linux
@@ -53,9 +56,51 @@ The webhook lives at `POST /ussd` and expects Africa's Talking's standard form f
 
 ## Deployment
 
-Deployed on [PythonAnywhere](https://www.pythonanywhere.com) — its free tier gives a persistent home directory, so the SQLite database survives web-app reloads (unlike Render/Railway's ephemeral disks). Configuration is done through their Web tab (WSGI file + virtualenv path), not a `Procfile`. Set a real `SECRET_KEY` via `instance/config.py` on the server — locally it falls back to a dev-only key, which is intentionally insecure and must not be used in production.
+Deployed on [PythonAnywhere](https://www.pythonanywhere.com) — its free tier gives a persistent home directory, so the SQLite database survives web-app reloads (unlike Render/Railway's ephemeral disks).
 
-`gunicorn`/`Procfile` are kept in the repo as a Render/Railway path if ever needed, but aren't used by the current PythonAnywhere deployment.
+1. Create a free PythonAnywhere account.
+2. **Consoles tab → Bash console:**
+   ```bash
+   git clone https://github.com/<your-username>/transit-verify.git
+   cd transit-verify
+   mkvirtualenv --python=/usr/bin/python3.10 transit-verify-venv
+   pip install -r requirements.txt
+   ```
+3. **Web tab → "Add a new web app" → "Manual configuration"** (not the
+   Flask template), matching Python version to the venv above.
+4. On the Web tab, set:
+   - **Virtualenv**: `/home/<your-username>/.virtualenvs/transit-verify-venv`
+   - **Source code**: `/home/<your-username>/transit-verify`
+5. Open the **WSGI configuration file** link on the Web tab and replace its
+   contents with:
+   ```python
+   import sys
+   path = '/home/<your-username>/transit-verify'
+   if path not in sys.path:
+       sys.path.insert(0, path)
+
+   from app import create_app
+   application = create_app()
+   ```
+6. Set a real secret key (back in the Bash console):
+   ```bash
+   mkdir -p instance
+   echo 'SECRET_KEY = "paste-a-real-random-value-here"' > instance/config.py
+   ```
+7. Initialize and seed the database (same console, venv active):
+   ```bash
+   flask --app app init-db
+   python seed.py
+   python seed_demo_anomalies.py   # optional
+   ```
+8. **Web tab → green "Reload" button.**
+9. Visit `https://<your-username>.pythonanywhere.com` and confirm the
+   login page loads.
+10. For the Africa's Talking sandbox, use
+    `https://<your-username>.pythonanywhere.com/ussd` as the callback URL.
+
+`gunicorn`/`Procfile` are kept in the repo as a Render/Railway path if ever
+needed, but aren't used by the PythonAnywhere deployment above.
 
 ## Project layout
 
