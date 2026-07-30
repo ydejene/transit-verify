@@ -2,6 +2,7 @@
 
 MOCK_ANOMALIES = [
     {
+        "anomalyId": 1,
         "vehiclePlate": "AA-4592",
         "terminalZone": "Megenagna",
         "routeSegment": "Meg-Bole 01",
@@ -10,10 +11,11 @@ MOCK_ANOMALIES = [
         "windowStart": "2026-07-28 08:10",
         "status": "Resolved",
         "penaltyReceiptRef": "RCP-2026-014",
-        "updated_by_full_name": "Abebe Kebede",
+        "updated_by_email": "a.kebede@transit.gov.et",
         "updated_at": "2026-07-28 08:25",
     },
     {
+        "anomalyId": 2,
         "vehiclePlate": "AA-2184",
         "terminalZone": "Bole",
         "routeSegment": "Bole-Megenagna 02",
@@ -22,10 +24,11 @@ MOCK_ANOMALIES = [
         "windowStart": "2026-07-28 09:20",
         "status": "Reviewed",
         "penaltyReceiptRef": "",
-        "updated_by_full_name": "Meron Tesfaye",
+        "updated_by_email": "m.tesfaye@transit.gov.et",
         "updated_at": "2026-07-28 09:35",
     },
     {
+        "anomalyId": 3,
         "vehiclePlate": "AA-7731",
         "terminalZone": "Saris",
         "routeSegment": "Saris-Asko 01",
@@ -34,10 +37,11 @@ MOCK_ANOMALIES = [
         "windowStart": "2026-07-28 10:05",
         "status": "Pending",
         "penaltyReceiptRef": "",
-        "updated_by_full_name": None,
+        "updated_by_email": None,
         "updated_at": None,
     },
     {
+        "anomalyId": 4,
         "vehiclePlate": "AA-1102",
         "terminalZone": "Tor Hailoch",
         "routeSegment": "Tor Hailoch-Asko 03",
@@ -46,12 +50,13 @@ MOCK_ANOMALIES = [
         "windowStart": "2026-07-28 11:10",
         "status": "Resolved",
         "penaltyReceiptRef": "RCP-2026-015",
-        "updated_by_full_name": "Abebe Kebede",
+        "updated_by_email": "a.kebede@transit.gov.et",
         "updated_at": "2026-07-28 11:30",
     },
 ]
 
 MOCK_CURRENT_USER = {
     "full_name": "Abebe Kebede",
+    "email": "a.kebede@transit.gov.et",
     "role": "Supervisor",
 }
