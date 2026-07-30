@@ -19,9 +19,9 @@
       <div class="navbar-avatar avatar-initials" aria-hidden="true">
         {{ name_parts[0][0] }}{{ name_parts[-1][0] }}
       </div>
-      <button class="navbar-logout-btn" aria-label="Logout">
+      <a href="{{ url_for('auth.logout') }}" class="navbar-logout-btn" aria-label="Logout">
         <span class="material-symbols-outlined">logout</span>
-      </button>
+      </a>
     </div>
   </div>
 </nav>

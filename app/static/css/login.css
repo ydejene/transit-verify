@@ -64,6 +64,17 @@
     margin: 0.25rem 0 0 0;
 }
 
+/* --- Error banner ------------------------------------------- */
+.login-error {
+    margin: 0;
+    padding: 0.75rem;
+    border-radius: var(--border-radius-default);
+    background-color: var(--color-error-container);
+    color: var(--color-on-error-container);
+    font-size: 14px;
+    text-align: center;
+}
+
 /* --- Footer ----------------------------------------------- */
 .login-footer {
     margin-top: 2rem;

@@ -30,11 +30,11 @@ VIOLATION_TYPES = [
     ("Fare Overcharge", "Vehicle charges more than the regulated fare for the route."),
 ]
 
-# (email, password, role, assignedZone)
+# (fullName, email, password, role, assignedZone)
 DEMO_USERS = [
-    ("a.kebede@transit.gov.et", "Manager123!", "TerminalManager", "Megenagna"),
-    ("m.tesfaye@transit.gov.et", "Supervisor123!", "Supervisor", None),
-    ("officer@transit.gov.et", "Officer123!", "Officer", None),
+    ("Abebe Kebede", "a.kebede@transit.gov.et", "Manager123!", "TerminalManager", "Megenagna"),
+    ("Meron Tesfaye", "m.tesfaye@transit.gov.et", "Supervisor123!", "Supervisor", None),
+    ("Dawit Alemu", "officer@transit.gov.et", "Officer123!", "Officer", None),
 ]
 
 
@@ -63,10 +63,10 @@ def seed():
                 (name, description),
             )
 
-        for email, password, role, assigned_zone in DEMO_USERS:
+        for full_name, email, password, role, assigned_zone in DEMO_USERS:
             db.execute(
-                "INSERT INTO users (email, passwordHash, role, assignedZone) VALUES (?, ?, ?, ?)",
-                (email, generate_password_hash(password), role, assigned_zone),
+                "INSERT INTO users (fullName, email, passwordHash, role, assignedZone) VALUES (?, ?, ?, ?, ?)",
+                (full_name, email, generate_password_hash(password), role, assigned_zone),
             )
 
         db.commit()
