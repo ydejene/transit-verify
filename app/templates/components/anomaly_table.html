@@ -18,7 +18,9 @@
           <th>Report Count</th>
           <th>Time Flagged</th>
           <th>Status</th>
+          {% if current_user.role in ("TerminalManager", "Supervisor") %}
           <th>Receipt Ref</th>
+          {% endif %}
           {% if current_user.role == "Supervisor" %}
           <th>Updated By</th>
           {% endif %}
@@ -34,16 +36,30 @@
           <td><code>{{ anomaly.reportCount }}</code></td>
           <td class="td-time">{{ anomaly.windowStart }}</td>
           <td>
-            <span class="status-badge status-badge--{{ anomaly.status|lower }}"
+            {% if current_user.role == "TerminalManager" and anomaly.status == "Pending" %}
+            <button
+              type="button"
+              class="status-badge status-badge--{{ anomaly.status|lower }} status-badge--clickable"
+              data-anomaly-id="{{ anomaly.anomalyId }}"
+              data-plate="{{ anomaly.vehiclePlate }}"
+              data-violation="{{ anomaly.violationType }}"
+            >{{ anomaly.status }}</button>
+            {% else %}
+            <span
+              class="status-badge status-badge--{{ anomaly.status|lower }}{{ ' status-badge--locked' if current_user.role == 'TerminalManager' }}"
+              {% if current_user.role == "TerminalManager" %}title="Status is locked once set"{% endif %}
               >{{ anomaly.status }}</span
             >
+            {% endif %}
           </td>
+          {% if current_user.role in ("TerminalManager", "Supervisor") %}
           <td class="td-receipt">{{ anomaly.penaltyReceiptRef or "—" }}</td>
+          {% endif %}
           {% if current_user.role == "Supervisor" %}
           <td>
             <div class="td-updated-by">
-              {% if anomaly.updated_by_full_name %}
-              <span>{{ anomaly.updated_by_full_name }}</span>
+              {% if anomaly.updated_by_email %}
+              <span>{{ anomaly.updated_by_email }}</span>
               <span class="updated-at">{{ anomaly.updated_at }}</span>
               {% else %}
               <span class="system-note">System Generated</span>

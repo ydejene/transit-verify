@@ -8,7 +8,12 @@ endblock %} {% block head %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/dashboard.css') }}"
 />
-{% endblock %} {% block content %} {% include "components/navbar.html" %}
+{% if current_user.role == "TerminalManager" %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/components/status_modal.css') }}"
+/>
+{% endif %} {% endblock %} {% block content %} {% include "components/navbar.html" %}
 
 <!-- ========================================================
      Main Canvas
@@ -26,6 +31,10 @@ endblock %} {% block head %}
   "components/anomaly_table.html" %}
 </main>
 
-{% endblock %} {% block scripts %}
+{% if current_user.role == "TerminalManager" %} {% include
+"components/status_modal.html" %} {% endif %} {% endblock %} {% block
+scripts %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-{% endblock %}
+{% if current_user.role == "TerminalManager" %}
+<script src="{{ url_for('static', filename='js/status_modal.js') }}"></script>
+{% endif %} {% endblock %}

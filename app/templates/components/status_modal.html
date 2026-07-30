@@ -1,0 +1,61 @@
+<!-- Terminal Manager only. Hidden by default, opened by status_modal.js when a Pending status badge is clicked. -->
+<div class="modal-overlay" id="statusModalOverlay" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="statusModalTitle">
+    <div class="modal-header">
+      <h2 id="statusModalTitle" class="font-headline-sm">Update Anomaly Status</h2>
+      <button type="button" class="modal-close-btn" id="statusModalClose" aria-label="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-anomaly-summary">
+        <span class="td-plate" id="statusModalPlate"></span>
+        <span class="modal-violation" id="statusModalViolation"></span>
+      </div>
+
+      <form id="statusModalForm">
+        <div class="modal-field-group">
+          <label class="filter-label">Set New Status</label>
+
+          <label class="modal-radio-option">
+            <input type="radio" name="statusUpdate" value="Reviewed" checked>
+            <div class="modal-radio-text">
+              <span class="modal-radio-title">Reviewed</span>
+              <span class="modal-radio-subtitle">Investigated, no violation found — no receipt needed.</span>
+            </div>
+          </label>
+
+          <label class="modal-radio-option">
+            <input type="radio" name="statusUpdate" value="Resolved">
+            <div class="modal-radio-text">
+              <span class="modal-radio-title">Resolved</span>
+              <span class="modal-radio-subtitle">Violation confirmed, penalty issued — receipt required.</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="modal-field-group" id="statusModalReceiptGroup">
+          <label class="filter-label" for="statusModalReceiptInput">
+            Receipt Reference <span class="modal-field-hint">(required for Resolved, e.g. RCP-2026-001)</span>
+          </label>
+          <input
+            class="filter-input"
+            type="text"
+            id="statusModalReceiptInput"
+            placeholder="RCP-2026-001"
+            disabled
+          >
+          <span class="modal-field-error" id="statusModalReceiptError" hidden>
+            Receipt must match the format RCP-YYYY-NNN
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-modal-cancel" id="statusModalCancel">Cancel</button>
+      <button type="button" class="btn-modal-confirm" id="statusModalConfirm">Confirm Update</button>
+    </div>
+  </div>
+</div>
