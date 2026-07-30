@@ -12,7 +12,9 @@ VIOLATION_TYPES = ["Route Chopping", "Fare Overcharge"]
 
 
 def _zones(db):
-    return db.execute("SELECT zoneId, assignedZoneName FROM zones ORDER BY zoneId").fetchall()
+    return db.execute(
+        "SELECT zoneId, assignedZoneName FROM zones ORDER BY zoneId"
+    ).fetchall()
 
 
 def _routes_for_zone(db, zone_id):
@@ -49,7 +51,9 @@ def handle_ussd(text):
 
     zones = _zones(db)
     if len(steps) == 2:
-        menu = "\n".join(f"{i + 1}. {z['assignedZoneName']}" for i, z in enumerate(zones))
+        menu = "\n".join(
+            f"{i + 1}. {z['assignedZoneName']}" for i, z in enumerate(zones)
+        )
         return f"CON Select the zone:\n{menu}"
 
     zone_choice = _menu_index(steps[2], len(zones))
@@ -91,5 +95,7 @@ def handle_ussd(text):
     if steps[5] != "1":
         return "END Invalid selection."
 
-    anomaly_service.record_report(plate, zone["assignedZoneName"], route["routeName"], violation)
+    anomaly_service.record_report(
+        plate, zone["assignedZoneName"], route["routeName"], violation
+    )
     return "END Thank you. Your report has been submitted."
