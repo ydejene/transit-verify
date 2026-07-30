@@ -3,7 +3,7 @@
 A USSD-based commuter reporting system for unauthorized transit violations on minibus taxis in Addis Ababa. Commuters report violations via a USSD menu (no smartphone or app required); reports are aggregated into verified anomalies for Terminal Managers to act on, with Supervisor oversight and
 read-only field access for Traffic Police Officers.
 
-Schema documentation: [docs/erd.md](docs/erd.md). 
+Schema documentation: [docs/erd.md](docs/erd.md).
 
 ## Stack
 
@@ -23,9 +23,13 @@ flask --app app init-db         # creates the schema
 python seed.py                  # populates reference data + demo accounts
 
 python run.py                   # http://127.0.0.1:5000
+
+python seed_demo_anomalies.py   # optional: ~60 anomalies for testing pagination/filters at scale
 ```
 
 ## Demo accounts
+
+For grading/evaluation only.
 
 | Role                         | Email                    | Password       |
 | ---------------------------- | ------------------------ | -------------- |
@@ -47,11 +51,11 @@ Tests run against a temporary SQLite database created per test session — local
 
 The webhook lives at `POST /ussd` and expects Africa's Talking's standard form fields (`sessionId`, `text`; `phoneNumber` is received but never read, stored, or logged). Point an Africa's Talking sandbox channel at the deployed URL's `/ussd` endpoint to test the full menu end-to-end.
 
-Live demo: _(added after deployment)_
-
 ## Deployment
 
-Deploys as a standard Flask app via `gunicorn` (`Procfile` included, for Render/Railway). Set the `SECRET_KEY` environment variable to a real random value — locally it falls back to a dev-only key, which is intentionally insecure. SQLite is file-based, so on platforms with ephemeral disks the database resets on redeploy; run `init-db` + `seed.py` again after each deploy.
+Deployed on [PythonAnywhere](https://www.pythonanywhere.com) — its free tier gives a persistent home directory, so the SQLite database survives web-app reloads (unlike Render/Railway's ephemeral disks). Configuration is done through their Web tab (WSGI file + virtualenv path), not a `Procfile`. Set a real `SECRET_KEY` via `instance/config.py` on the server — locally it falls back to a dev-only key, which is intentionally insecure and must not be used in production.
+
+`gunicorn`/`Procfile` are kept in the repo as a Render/Railway path if ever needed, but aren't used by the current PythonAnywhere deployment.
 
 ## Project layout
 
@@ -76,6 +80,7 @@ tests/
   conftest.py      test fixtures (isolated temp DB)
   test_*.py        auth, dashboard, anomaly_service, ussd_service
 seed.py            reference data + demo account seeding
+seed_demo_anomalies.py   optional bulk anomaly generator for testing at scale
 run.py             local dev entry point
 Procfile           deployment start command
 requirements.txt   runtime dependencies

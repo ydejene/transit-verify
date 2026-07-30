@@ -12,7 +12,7 @@ from app.database import get_db
 
 TS_FORMAT = "%Y-%m-%d %H:%M:%S"
 RECEIPT_PATTERN = re.compile(r"^RCP-\d{4}-\d{3}$")
-PER_PAGE = 10
+PER_PAGE = 25
 ADDIS_ABABA_UTC_OFFSET = timedelta(hours=3)  # no DST in Ethiopia
 
 
