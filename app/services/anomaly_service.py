@@ -24,7 +24,11 @@ def _minutes_ago_str(minutes):
 def _addis_date_to_utc_bound(date_str, end_of_day=False):
     """Converts an Addis-local calendar date into a UTC timestamp bound."""
     local_midnight = datetime.strptime(date_str, "%Y-%m-%d")
-    local_bound = local_midnight + timedelta(hours=23, minutes=59, seconds=59) if end_of_day else local_midnight
+    local_bound = (
+        local_midnight + timedelta(hours=23, minutes=59, seconds=59)
+        if end_of_day
+        else local_midnight
+    )
     utc_bound = local_bound - ADDIS_ABABA_UTC_OFFSET
     return utc_bound.strftime(TS_FORMAT)
 
@@ -37,7 +41,9 @@ def addis_today_iso():
 def _utc_str_to_addis_str(utc_str):
     if not utc_str:
         return utc_str
-    return (datetime.strptime(utc_str, TS_FORMAT) + ADDIS_ABABA_UTC_OFFSET).strftime(TS_FORMAT)
+    return (datetime.strptime(utc_str, TS_FORMAT) + ADDIS_ABABA_UTC_OFFSET).strftime(
+        TS_FORMAT
+    )
 
 
 def record_report(vehicle_plate, terminal_zone, route_segment, violation_type):
@@ -65,19 +71,29 @@ def record_report(vehicle_plate, terminal_zone, route_segment, violation_type):
         (vehicle_plate, terminal_zone, route_segment, violation_type),
     ).lastrowid
 
-    _aggregate(db, vehicle_plate, terminal_zone, route_segment, violation_type, report_id)
+    _aggregate(
+        db, vehicle_plate, terminal_zone, route_segment, violation_type, report_id
+    )
     db.commit()
     return True
 
 
-def _aggregate(db, vehicle_plate, terminal_zone, route_segment, violation_type, report_id):
+def _aggregate(
+    db, vehicle_plate, terminal_zone, route_segment, violation_type, report_id
+):
     window_start_cutoff = _minutes_ago_str(ANOMALY_WINDOW_MINUTES)
 
     existing = db.execute(
         """SELECT anomalyId, windowStart FROM anomalies
            WHERE vehiclePlate = ? AND terminalZone = ? AND routeSegment = ? AND violationType = ?
            AND windowStart >= ?""",
-        (vehicle_plate, terminal_zone, route_segment, violation_type, window_start_cutoff),
+        (
+            vehicle_plate,
+            terminal_zone,
+            route_segment,
+            violation_type,
+            window_start_cutoff,
+        ),
     ).fetchone()
 
     if existing:
@@ -87,21 +103,37 @@ def _aggregate(db, vehicle_plate, terminal_zone, route_segment, violation_type, 
             """SELECT COUNT(*) FROM raw_reports
                WHERE vehiclePlate = ? AND terminalZone = ? AND routeSegment = ? AND violationType = ?
                AND (anomaly_id = ? OR anomaly_id IS NULL) AND timestamp >= ?""",
-            (vehicle_plate, terminal_zone, route_segment, violation_type, existing["anomalyId"], existing["windowStart"]),
+            (
+                vehicle_plate,
+                terminal_zone,
+                route_segment,
+                violation_type,
+                existing["anomalyId"],
+                existing["windowStart"],
+            ),
         ).fetchone()[0]
 
         db.execute(
             "UPDATE anomalies SET reportCount = ?, updated_at = CURRENT_TIMESTAMP WHERE anomalyId = ?",
             (new_count, existing["anomalyId"]),
         )
-        db.execute("UPDATE raw_reports SET anomaly_id = ? WHERE reportId = ?", (existing["anomalyId"], report_id))
+        db.execute(
+            "UPDATE raw_reports SET anomaly_id = ? WHERE reportId = ?",
+            (existing["anomalyId"], report_id),
+        )
         return
 
     count, window_start = db.execute(
         """SELECT COUNT(*), MIN(timestamp) FROM raw_reports
            WHERE vehiclePlate = ? AND terminalZone = ? AND routeSegment = ? AND violationType = ?
            AND anomaly_id IS NULL AND timestamp >= ?""",
-        (vehicle_plate, terminal_zone, route_segment, violation_type, window_start_cutoff),
+        (
+            vehicle_plate,
+            terminal_zone,
+            route_segment,
+            violation_type,
+            window_start_cutoff,
+        ),
     ).fetchone()
 
     if count < ANOMALY_THRESHOLD:
@@ -111,18 +143,40 @@ def _aggregate(db, vehicle_plate, terminal_zone, route_segment, violation_type, 
         """INSERT INTO anomalies
            (vehiclePlate, terminalZone, routeSegment, violationType, reportCount, windowStart, status, penaltyReceiptRef)
            VALUES (?, ?, ?, ?, ?, ?, 'Pending', '')""",
-        (vehicle_plate, terminal_zone, route_segment, violation_type, count, window_start),
+        (
+            vehicle_plate,
+            terminal_zone,
+            route_segment,
+            violation_type,
+            count,
+            window_start,
+        ),
     ).lastrowid
 
     db.execute(
         """UPDATE raw_reports SET anomaly_id = ?
            WHERE vehiclePlate = ? AND terminalZone = ? AND routeSegment = ? AND violationType = ?
            AND anomaly_id IS NULL AND timestamp >= ?""",
-        (new_anomaly_id, vehicle_plate, terminal_zone, route_segment, violation_type, window_start),
+        (
+            new_anomaly_id,
+            vehicle_plate,
+            terminal_zone,
+            route_segment,
+            violation_type,
+            window_start,
+        ),
     )
 
 
-def get_anomalies(zone=None, status=None, search=None, date_from=None, date_to=None, page=1, per_page=PER_PAGE):
+def get_anomalies(
+    zone=None,
+    status=None,
+    search=None,
+    date_from=None,
+    date_to=None,
+    page=1,
+    per_page=PER_PAGE,
+):
     """Returns (rows, total_count, total_pages, page) for the given filters."""
     db = get_db()
     conditions = []
@@ -146,7 +200,9 @@ def get_anomalies(zone=None, status=None, search=None, date_from=None, date_to=N
 
     where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 
-    total = db.execute(f"SELECT COUNT(*) FROM anomalies a {where_clause}", params).fetchone()[0]
+    total = db.execute(
+        f"SELECT COUNT(*) FROM anomalies a {where_clause}", params
+    ).fetchone()[0]
     total_pages = max(1, math.ceil(total / per_page))
     page = min(max(1, page), total_pages)
     offset = (page - 1) * per_page
@@ -175,7 +231,9 @@ def get_anomalies(zone=None, status=None, search=None, date_from=None, date_to=N
 def update_status(anomaly_id, new_status, receipt, updated_by_user_id):
     """Forward-only status update. Returns (success, error_message)."""
     db = get_db()
-    anomaly = db.execute("SELECT status FROM anomalies WHERE anomalyId = ?", (anomaly_id,)).fetchone()
+    anomaly = db.execute(
+        "SELECT status FROM anomalies WHERE anomalyId = ?", (anomaly_id,)
+    ).fetchone()
 
     if anomaly is None:
         return False, "Anomaly not found."
@@ -190,7 +248,12 @@ def update_status(anomaly_id, new_status, receipt, updated_by_user_id):
         """UPDATE anomalies
            SET status = ?, penaltyReceiptRef = ?, updated_by_user_id = ?, updated_at = CURRENT_TIMESTAMP
            WHERE anomalyId = ?""",
-        (new_status, receipt if new_status == "Resolved" else "", updated_by_user_id, anomaly_id),
+        (
+            new_status,
+            receipt if new_status == "Resolved" else "",
+            updated_by_user_id,
+            anomaly_id,
+        ),
     )
     db.commit()
     return True, None

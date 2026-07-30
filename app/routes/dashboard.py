@@ -26,8 +26,15 @@ def dashboard():
     date_to = request.args.get("date_to")
     page = request.args.get("page", 1, type=int)
 
-    anomalies, total_anomalies_count, total_pages, current_page = anomaly_service.get_anomalies(
-        zone=zone, status=status, search=search, date_from=date_from, date_to=date_to, page=page
+    anomalies, total_anomalies_count, total_pages, current_page = (
+        anomaly_service.get_anomalies(
+            zone=zone,
+            status=status,
+            search=search,
+            date_from=date_from,
+            date_to=date_to,
+            page=page,
+        )
     )
 
     return render_template(

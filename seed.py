@@ -32,7 +32,13 @@ VIOLATION_TYPES = [
 
 # (fullName, email, password, role, assignedZone)
 DEMO_USERS = [
-    ("Abebe Kebede", "a.kebede@transit.gov.et", "Manager123!", "TerminalManager", "Megenagna"),
+    (
+        "Abebe Kebede",
+        "a.kebede@transit.gov.et",
+        "Manager123!",
+        "TerminalManager",
+        "Megenagna",
+    ),
     ("Meron Tesfaye", "m.tesfaye@transit.gov.et", "Supervisor123!", "Supervisor", None),
     ("Dawit Alemu", "officer@transit.gov.et", "Officer123!", "Officer", None),
 ]
@@ -66,7 +72,13 @@ def seed():
         for full_name, email, password, role, assigned_zone in DEMO_USERS:
             db.execute(
                 "INSERT INTO users (fullName, email, passwordHash, role, assignedZone) VALUES (?, ?, ?, ?, ?)",
-                (full_name, email, generate_password_hash(password), role, assigned_zone),
+                (
+                    full_name,
+                    email,
+                    generate_password_hash(password),
+                    role,
+                    assigned_zone,
+                ),
             )
 
         db.commit()

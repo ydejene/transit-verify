@@ -2,9 +2,7 @@ import os
 from flask import Flask
 
 from app import database
-from app.routes import auth, dashboard
-
-# from app.routes import mobile, ussd
+from app.routes import auth, dashboard, ussd
 
 
 def create_app():
@@ -16,6 +14,5 @@ def create_app():
     database.init_app(app)
     app.register_blueprint(auth.bp)
     app.register_blueprint(dashboard.bp)
-    # app.register_blueprint(mobile.bp)
-    # app.register_blueprint(ussd.bp)
+    app.register_blueprint(ussd.bp)
     return app
