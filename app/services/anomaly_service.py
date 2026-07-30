@@ -257,7 +257,9 @@ def get_anomalies(
     return anomalies, total, total_pages, page
 
 
-def update_status(anomaly_id, new_status, receipt, updated_by_user_id, manager_zone=None):
+def update_status(
+    anomaly_id, new_status, receipt, updated_by_user_id, manager_zone=None
+):
     """Forward-only status update. Returns (success, error_message)."""
     db = get_db()
     anomaly = db.execute(

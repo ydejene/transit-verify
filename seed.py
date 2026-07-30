@@ -40,8 +40,20 @@ DEMO_USERS = [
         "TerminalManager",
         "Megenagna",
     ),
-    ("Selamawit Girma", "s.girma@transit.gov.et", "Manager123!", "TerminalManager", "Bole"),
-    ("Yohannes Bekele", "y.bekele@transit.gov.et", "Manager123!", "TerminalManager", "Saris"),
+    (
+        "Selamawit Girma",
+        "s.girma@transit.gov.et",
+        "Manager123!",
+        "TerminalManager",
+        "Bole",
+    ),
+    (
+        "Yohannes Bekele",
+        "y.bekele@transit.gov.et",
+        "Manager123!",
+        "TerminalManager",
+        "Saris",
+    ),
     ("Meron Tesfaye", "m.tesfaye@transit.gov.et", "Supervisor123!", "Supervisor", None),
     ("Dawit Alemu", "officer@transit.gov.et", "Officer123!", "Officer", None),
 ]

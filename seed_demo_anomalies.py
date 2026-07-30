@@ -36,7 +36,9 @@ def generate():
             for _ in range(anomaly_service.ANOMALY_THRESHOLD + random.randint(0, 3)):
                 anomaly_service.record_report(plate, zone, route, violation)
 
-        anomalies, total, _, _ = anomaly_service.get_anomalies(status="All", per_page=1000)
+        anomalies, total, _, _ = anomaly_service.get_anomalies(
+            status="All", per_page=1000
+        )
         for anomaly in anomalies:
             roll = random.random()
             if roll < 0.5:
@@ -47,7 +49,9 @@ def generate():
                     manager_id,
                 )
             elif roll < 0.7:
-                anomaly_service.update_status(anomaly["anomalyId"], "Reviewed", "", manager_id)
+                anomaly_service.update_status(
+                    anomaly["anomalyId"], "Reviewed", "", manager_id
+                )
 
         print(f"Generated {total} demo anomalies.")
 
