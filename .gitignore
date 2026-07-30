@@ -4,7 +4,7 @@ venv/
 env/
 ENV/
 
-# Flask instance folder (Contains your local private config.py with secrets)
+# Flask instance folder (Contains local SQLite database file)
 instance/
 
 # Python cache files
