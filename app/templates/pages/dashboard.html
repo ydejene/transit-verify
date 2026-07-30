@@ -8,7 +8,7 @@ endblock %} {% block head %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/dashboard.css') }}"
 />
-{% if current_user.role == "TerminalManager" %}
+{% if current_user.role is eq "TerminalManager" %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/components/status_modal.css') }}"
@@ -31,10 +31,9 @@ endblock %} {% block head %}
   "components/anomaly_table.html" %}
 </main>
 
-{% if current_user.role == "TerminalManager" %} {% include
+{% if current_user.role is eq "TerminalManager" %} {% include
 "components/status_modal.html" %} {% endif %} {% endblock %} {% block
 scripts %}
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-{% if current_user.role == "TerminalManager" %}
+{% if current_user.role is eq "TerminalManager" %}
 <script src="{{ url_for('static', filename='js/status_modal.js') }}"></script>
 {% endif %} {% endblock %}
