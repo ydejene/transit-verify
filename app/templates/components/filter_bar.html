@@ -1,4 +1,4 @@
-<!-- Expects `filters` { zone, status, search, date_from, date_to } and `today` in context -->
+<!-- Expects `filters`, `current_user`, `today` in context -->
 <form class="filter-bar" method="get">
   <!-- Row 1: Search, Zone, Status, Time Slot -->
   <div class="filter-row">
@@ -19,11 +19,17 @@
 
     <div class="filter-field filter-field--fixed">
       <label class="filter-label" for="filterZone">Zone</label>
+      {% if current_user.role is eq "TerminalManager" %}
+      <select class="filter-select" id="filterZone" disabled title="Scoped to your assigned zone">
+        <option selected>{{ filters.zone }}</option>
+      </select>
+      {% else %}
       <select class="filter-select" id="filterZone" name="zone">
         {% for zone in ("All", "Megenagna", "Bole", "Saris", "Asko", "Tor Hailoch") %}
         <option value="{{ zone }}" {{ "selected" if filters.zone is eq zone }}>{{ zone }}</option>
         {% endfor %}
       </select>
+      {% endif %}
     </div>
 
     <div class="filter-field filter-field--fixed">
@@ -37,11 +43,11 @@
 
     <div class="filter-field filter-field--fixed">
       <label class="filter-label" for="filterTimeSlot">Time Slot</label>
-      <select class="filter-select" id="filterTimeSlot" disabled title="Not implemented yet">
-        <option>All</option>
-        <option>Morning (6AM–12PM)</option>
-        <option>Afternoon (12PM–6PM)</option>
-        <option>Evening (6PM–12AM)</option>
+      <select class="filter-select" id="filterTimeSlot" name="time_slot">
+        <option value="" {{ "selected" if filters.time_slot is eq "" }}>All</option>
+        <option value="Morning" {{ "selected" if filters.time_slot is eq "Morning" }}>Morning (6AM–12PM)</option>
+        <option value="Afternoon" {{ "selected" if filters.time_slot is eq "Afternoon" }}>Afternoon (12PM–6PM)</option>
+        <option value="Evening" {{ "selected" if filters.time_slot is eq "Evening" }}>Evening (6PM–12AM)</option>
       </select>
     </div>
   </div>
@@ -50,11 +56,12 @@
   <div class="filter-row">
     <div class="filter-field filter-field--fixed">
       <label class="filter-label" for="filterDatePreset">Date Preset</label>
-      <select class="filter-select" id="filterDatePreset" disabled title="Not implemented yet">
-        <option>Today</option>
-        <option>This Week</option>
-        <option>This Month</option>
-        <option>All Time</option>
+      <select class="filter-select" id="filterDatePreset" name="date_preset">
+        <option value="" {{ "selected" if filters.date_preset is eq "" }}>Custom</option>
+        <option value="Today" {{ "selected" if filters.date_preset is eq "Today" }}>Today</option>
+        <option value="This Week" {{ "selected" if filters.date_preset is eq "This Week" }}>This Week</option>
+        <option value="This Month" {{ "selected" if filters.date_preset is eq "This Month" }}>This Month</option>
+        <option value="All Time" {{ "selected" if filters.date_preset is eq "All Time" }}>All Time</option>
       </select>
     </div>
 

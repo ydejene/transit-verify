@@ -12,7 +12,7 @@ from app.database import get_db
 
 TS_FORMAT = "%Y-%m-%d %H:%M:%S"
 RECEIPT_PATTERN = re.compile(r"^RCP-\d{4}-\d{3}$")
-PER_PAGE = 10
+PER_PAGE = 25
 ADDIS_ABABA_UTC_OFFSET = timedelta(hours=3)  # no DST in Ethiopia
 
 
@@ -44,6 +44,27 @@ def _utc_str_to_addis_str(utc_str):
     return (datetime.strptime(utc_str, TS_FORMAT) + ADDIS_ABABA_UTC_OFFSET).strftime(
         TS_FORMAT
     )
+
+
+# Addis-local hour ranges; converted to UTC hours when querying (offset is
+# small enough that none of these wrap past midnight either side)
+TIME_SLOTS = {"Morning": (6, 12), "Afternoon": (12, 18), "Evening": (18, 24)}
+
+
+def resolve_date_preset(preset):
+    """Returns (date_from, date_to) Addis-local ISO dates for a named preset."""
+    if not preset or preset == "All Time":
+        return None, None
+    today_str = addis_today_iso()
+    today = datetime.strptime(today_str, "%Y-%m-%d").date()
+    if preset == "Today":
+        return today_str, today_str
+    if preset == "This Week":
+        start = today - timedelta(days=today.weekday())
+        return start.isoformat(), today_str
+    if preset == "This Month":
+        return today.replace(day=1).isoformat(), today_str
+    return None, None
 
 
 def record_report(vehicle_plate, terminal_zone, route_segment, violation_type):
@@ -174,6 +195,7 @@ def get_anomalies(
     search=None,
     date_from=None,
     date_to=None,
+    time_slot=None,
     page=1,
     per_page=PER_PAGE,
 ):
@@ -197,6 +219,13 @@ def get_anomalies(
     if date_to:
         conditions.append("a.windowStart <= ?")
         params.append(_addis_date_to_utc_bound(date_to, end_of_day=True))
+    if time_slot in TIME_SLOTS:
+        local_start_h, local_end_h = TIME_SLOTS[time_slot]
+        offset_h = int(ADDIS_ABABA_UTC_OFFSET.total_seconds() // 3600)
+        conditions.append("CAST(strftime('%H', a.windowStart) AS INTEGER) >= ?")
+        params.append(local_start_h - offset_h)
+        conditions.append("CAST(strftime('%H', a.windowStart) AS INTEGER) < ?")
+        params.append(local_end_h - offset_h)
 
     where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 
@@ -228,15 +257,19 @@ def get_anomalies(
     return anomalies, total, total_pages, page
 
 
-def update_status(anomaly_id, new_status, receipt, updated_by_user_id):
+def update_status(
+    anomaly_id, new_status, receipt, updated_by_user_id, manager_zone=None
+):
     """Forward-only status update. Returns (success, error_message)."""
     db = get_db()
     anomaly = db.execute(
-        "SELECT status FROM anomalies WHERE anomalyId = ?", (anomaly_id,)
+        "SELECT status, terminalZone FROM anomalies WHERE anomalyId = ?", (anomaly_id,)
     ).fetchone()
 
     if anomaly is None:
         return False, "Anomaly not found."
+    if manager_zone and anomaly["terminalZone"] != manager_zone:
+        return False, "This anomaly is outside your assigned zone."
     if anomaly["status"] != "Pending":
         return False, "Status is forward-only; this anomaly is already locked."
     if new_status not in ("Reviewed", "Resolved"):

@@ -5,10 +5,15 @@ accumulates every prior selection for the session, separated by '*', so
 each step is derived by re-parsing it.
 """
 
+import re
+
 from app.database import get_db
 from app.services import anomaly_service
 
 VIOLATION_TYPES = ["Route Chopping", "Fare Overcharge"]
+# not a strict format match (real plates vary too much for one pattern) —
+# just rejects obviously-not-a-plate input like "hello" or a single char
+PLATE_PATTERN = re.compile(r"^(?=.*\d)[A-Z0-9\- ]{4,15}$")
 
 
 def _zones(db):
@@ -46,8 +51,8 @@ def handle_ussd(text):
         return "CON Enter the vehicle's license plate number:"
 
     plate = steps[1].strip().upper()
-    if not plate:
-        return "END Invalid plate number."
+    if not PLATE_PATTERN.match(plate):
+        return "END Invalid plate number. Use letters, numbers, and hyphens only."
 
     zones = _zones(db)
     if len(steps) == 2:
