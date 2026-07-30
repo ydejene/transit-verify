@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS violation_types (
 -- Auth
 CREATE TABLE IF NOT EXISTS users (
     userId INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullName TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     passwordHash TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('TerminalManager', 'Supervisor', 'Officer')),

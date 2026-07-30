@@ -3,21 +3,25 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, render_template, request
 
-from app.data.mock_data import MOCK_ANOMALIES, MOCK_CURRENT_USER
+from app.data.mock_data import MOCK_ANOMALIES  # anomaly data itself is still mocked
+from app.routes.auth import current_user as load_current_user
+from app.routes.auth import login_required
 
 bp = Blueprint("dashboard", __name__)
 
 RECEIPT_PATTERN = re.compile(r"^RCP-\d{4}-\d{3}$")
-VALID_ROLES = ("Supervisor", "TerminalManager", "Officer")
 
 
 @bp.route("/dashboard")
+@login_required
 def dashboard():
-    # temporary preview switch until real sessions exist (auth.py)
-    role = request.args.get("role", MOCK_CURRENT_USER["role"])
-    if role not in VALID_ROLES:
-        role = MOCK_CURRENT_USER["role"]
-    current_user = {**MOCK_CURRENT_USER, "role": role}
+    user_row = load_current_user()
+    current_user = {
+        "full_name": user_row["fullName"],
+        "email": user_row["email"],
+        "role": user_row["role"],
+        "assignedZone": user_row["assignedZone"],
+    }
 
     current_page = 1
     total_pages = 1
@@ -35,7 +39,12 @@ def dashboard():
 
 
 @bp.route("/dashboard/anomalies/<int:anomaly_id>/status", methods=["POST"])
+@login_required
 def update_anomaly_status(anomaly_id):
+    user_row = load_current_user()
+    if user_row["role"] != "TerminalManager":
+        return jsonify(error="Only a Terminal Manager can update anomaly status."), 403
+
     anomaly = next((a for a in MOCK_ANOMALIES if a["anomalyId"] == anomaly_id), None)
     if anomaly is None:
         return jsonify(error="Anomaly not found."), 404
@@ -55,8 +64,7 @@ def update_anomaly_status(anomaly_id):
 
     anomaly["status"] = status
     anomaly["penaltyReceiptRef"] = receipt if status == "Resolved" else ""
-    # replaced with the authenticated user's email once real sessions exist
-    anomaly["updated_by_email"] = MOCK_CURRENT_USER["email"]
+    anomaly["updated_by_email"] = user_row["email"]
     anomaly["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     return jsonify(anomaly)

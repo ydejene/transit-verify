@@ -32,6 +32,7 @@ SQLite, 7 tables. All primary keys are `INTEGER PRIMARY KEY AUTOINCREMENT`.
 | Column | Type | Constraints |
 |---|---|---|
 | userId | INTEGER | PK |
+| fullName | TEXT | NOT NULL |
 | email | TEXT | NOT NULL, UNIQUE |
 | passwordHash | TEXT | NOT NULL |
 | role | TEXT | NOT NULL, CHECK IN (TerminalManager, Supervisor, Officer) |

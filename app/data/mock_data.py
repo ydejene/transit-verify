@@ -54,9 +54,3 @@ MOCK_ANOMALIES = [
         "updated_at": "2026-07-28 11:30",
     },
 ]
-
-MOCK_CURRENT_USER = {
-    "full_name": "Abebe Kebede",
-    "email": "a.kebede@transit.gov.et",
-    "role": "Supervisor",
-}
