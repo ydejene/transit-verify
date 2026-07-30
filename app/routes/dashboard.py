@@ -1,5 +1,3 @@
-from datetime import date
-
 from flask import Blueprint, jsonify, render_template, request
 
 from app.routes.auth import current_user as load_current_user
@@ -42,7 +40,7 @@ def dashboard():
         has_previous=current_page > 1,
         has_next=current_page < total_pages,
         per_page=anomaly_service.PER_PAGE,
-        today=date.today().isoformat(),
+        today=anomaly_service.addis_today_iso(),
         filters={
             "zone": zone or "All",
             "status": status,

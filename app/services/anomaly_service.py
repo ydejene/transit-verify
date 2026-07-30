@@ -16,10 +16,6 @@ PER_PAGE = 10
 ADDIS_ABABA_UTC_OFFSET = timedelta(hours=3)  # no DST in Ethiopia
 
 
-def _utc_now_str():
-    return datetime.now(timezone.utc).strftime(TS_FORMAT)
-
-
 def _minutes_ago_str(minutes):
     cutoff = datetime.now(timezone.utc) - timedelta(minutes=minutes)
     return cutoff.strftime(TS_FORMAT)
@@ -31,6 +27,17 @@ def _addis_date_to_utc_bound(date_str, end_of_day=False):
     local_bound = local_midnight + timedelta(hours=23, minutes=59, seconds=59) if end_of_day else local_midnight
     utc_bound = local_bound - ADDIS_ABABA_UTC_OFFSET
     return utc_bound.strftime(TS_FORMAT)
+
+
+def addis_today_iso():
+    """Today's calendar date in Addis Ababa, independent of server timezone."""
+    return (datetime.now(timezone.utc) + ADDIS_ABABA_UTC_OFFSET).strftime("%Y-%m-%d")
+
+
+def _utc_str_to_addis_str(utc_str):
+    if not utc_str:
+        return utc_str
+    return (datetime.strptime(utc_str, TS_FORMAT) + ADDIS_ABABA_UTC_OFFSET).strftime(TS_FORMAT)
 
 
 def record_report(vehicle_plate, terminal_zone, route_segment, violation_type):
@@ -74,11 +81,13 @@ def _aggregate(db, vehicle_plate, terminal_zone, route_segment, violation_type, 
     ).fetchone()
 
     if existing:
+        # count reports already tagged to this anomaly plus any not yet tagged,
+        # not just untagged ones, or a later report would reset the total
         new_count = db.execute(
             """SELECT COUNT(*) FROM raw_reports
                WHERE vehiclePlate = ? AND terminalZone = ? AND routeSegment = ? AND violationType = ?
-               AND anomaly_id IS NULL AND timestamp >= ?""",
-            (vehicle_plate, terminal_zone, route_segment, violation_type, existing["windowStart"]),
+               AND (anomaly_id = ? OR anomaly_id IS NULL) AND timestamp >= ?""",
+            (vehicle_plate, terminal_zone, route_segment, violation_type, existing["anomalyId"], existing["windowStart"]),
         ).fetchone()[0]
 
         db.execute(
@@ -152,7 +161,15 @@ def get_anomalies(zone=None, status=None, search=None, date_from=None, date_to=N
         [*params, per_page, offset],
     ).fetchall()
 
-    return rows, total, total_pages, page
+    # displayed to users in Addis time; stored/compared as UTC everywhere else
+    anomalies = []
+    for row in rows:
+        anomaly = dict(row)
+        anomaly["windowStart"] = _utc_str_to_addis_str(anomaly["windowStart"])
+        anomaly["updated_at"] = _utc_str_to_addis_str(anomaly["updated_at"])
+        anomalies.append(anomaly)
+
+    return anomalies, total, total_pages, page
 
 
 def update_status(anomaly_id, new_status, receipt, updated_by_user_id):
