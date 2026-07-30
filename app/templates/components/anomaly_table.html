@@ -1,4 +1,4 @@
-<!-- Expects anomalies, current_user, total_anomalies_count, current_page, total_pages, has_previous, has_next in context -->
+<!-- Expects anomalies, current_user, total_anomalies_count, current_page, total_pages, per_page, has_previous, has_next, filters in context -->
 
 <!-- Stats Card -->
 <div class="stats-card">
@@ -21,7 +21,7 @@
           {% if current_user.role in ("TerminalManager", "Supervisor") %}
           <th>Receipt Ref</th>
           {% endif %}
-          {% if current_user.role == "Supervisor" %}
+          {% if current_user.role is eq "Supervisor" %}
           <th>Updated By</th>
           {% endif %}
         </tr>
@@ -36,7 +36,7 @@
           <td><code>{{ anomaly.reportCount }}</code></td>
           <td class="td-time">{{ anomaly.windowStart }}</td>
           <td>
-            {% if current_user.role == "TerminalManager" and anomaly.status == "Pending" %}
+            {% if current_user.role is eq "TerminalManager" and anomaly.status is eq "Pending" %}
             <button
               type="button"
               class="status-badge status-badge--{{ anomaly.status|lower }} status-badge--clickable"
@@ -46,8 +46,8 @@
             >{{ anomaly.status }}</button>
             {% else %}
             <span
-              class="status-badge status-badge--{{ anomaly.status|lower }}{{ ' status-badge--locked' if current_user.role == 'TerminalManager' }}"
-              {% if current_user.role == "TerminalManager" %}title="Status is locked once set"{% endif %}
+              class="status-badge status-badge--{{ anomaly.status|lower }}{{ ' status-badge--locked' if current_user.role is eq 'TerminalManager' }}"
+              {% if current_user.role is eq "TerminalManager" %}title="Status is locked once set"{% endif %}
               >{{ anomaly.status }}</span
             >
             {% endif %}
@@ -55,7 +55,7 @@
           {% if current_user.role in ("TerminalManager", "Supervisor") %}
           <td class="td-receipt">{{ anomaly.penaltyReceiptRef or "—" }}</td>
           {% endif %}
-          {% if current_user.role == "Supervisor" %}
+          {% if current_user.role is eq "Supervisor" %}
           <td>
             <div class="td-updated-by">
               {% if anomaly.updated_by_email %}
@@ -76,18 +76,32 @@
 
   <!-- Pagination -->
   <div class="pagination-bar">
+    {% set range_start = (current_page - 1) * per_page + 1 if total_anomalies_count > 0 else 0 %}
+    {% set range_end = range_start + anomalies|length - 1 if total_anomalies_count > 0 else 0 %}
     <span
-      >Showing 1 to {{ anomalies|length }} of {{ total_anomalies_count }}
+      >Showing {{ range_start }} to {{ range_end }} of {{ total_anomalies_count }}
       entries</span
     >
     <div class="pagination-controls">
-      <button class="pagination-btn" {{ "disabled" if not has_previous }}>Previous</button>
+      {% if has_previous %}
+      <a class="pagination-btn" href="{{ url_for('dashboard.dashboard', page=current_page - 1, zone=filters.zone, status=filters.status, search=filters.search, date_from=filters.date_from, date_to=filters.date_to) }}">Previous</a>
+      {% else %}
+      <span class="pagination-btn pagination-btn--disabled">Previous</span>
+      {% endif %}
 
       {% for page_num in range(1, total_pages + 1) %}
-      <button class="pagination-btn{{ ' pagination-btn--active' if page_num == current_page }}">{{ page_num }}</button>
+      {% if page_num is eq current_page %}
+      <span class="pagination-btn pagination-btn--active">{{ page_num }}</span>
+      {% else %}
+      <a class="pagination-btn" href="{{ url_for('dashboard.dashboard', page=page_num, zone=filters.zone, status=filters.status, search=filters.search, date_from=filters.date_from, date_to=filters.date_to) }}">{{ page_num }}</a>
+      {% endif %}
       {% endfor %}
 
-      <button class="pagination-btn" {{ "disabled" if not has_next }}>Next</button>
+      {% if has_next %}
+      <a class="pagination-btn" href="{{ url_for('dashboard.dashboard', page=current_page + 1, zone=filters.zone, status=filters.status, search=filters.search, date_from=filters.date_from, date_to=filters.date_to) }}">Next</a>
+      {% else %}
+      <span class="pagination-btn pagination-btn--disabled">Next</span>
+      {% endif %}
     </div>
   </div>
 </div>

@@ -82,6 +82,11 @@
   border-color: var(--color-primary-container);
 }
 
+.filter-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .filter-input--search {
   padding-left: 2rem;
 }
@@ -301,21 +306,23 @@
 }
 
 .pagination-btn {
+  display: inline-block;
   padding: 0.25rem 0.75rem;
   border: 1px solid var(--color-outline-variant);
   border-radius: var(--border-radius-default);
   background: none;
   font-size: 14px;
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.15s;
   color: var(--color-on-surface);
 }
 
-.pagination-btn:hover:not(:disabled) {
+.pagination-btn:hover:not(.pagination-btn--disabled) {
   background-color: var(--color-surface-variant);
 }
 
-.pagination-btn:disabled {
+.pagination-btn--disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
