@@ -19,12 +19,20 @@ def dashboard():
     }
 
     zone = request.args.get("zone")
+    # a Terminal Manager is scoped to their own zone regardless of the URL
+    if current_user["role"] == "TerminalManager" and current_user["assignedZone"]:
+        zone = current_user["assignedZone"]
+
     # UI's Status dropdown defaults to Pending; "All" must be requested explicitly
     status = request.args.get("status", "Pending")
     search = request.args.get("search")
-    date_from = request.args.get("date_from")
-    date_to = request.args.get("date_to")
+    time_slot = request.args.get("time_slot", "")
+    date_preset = request.args.get("date_preset", "")
     page = request.args.get("page", 1, type=int)
+
+    preset_from, preset_to = anomaly_service.resolve_date_preset(date_preset)
+    date_from = preset_from or request.args.get("date_from")
+    date_to = preset_to or request.args.get("date_to")
 
     anomalies, total_anomalies_count, total_pages, current_page = (
         anomaly_service.get_anomalies(
@@ -33,6 +41,7 @@ def dashboard():
             search=search,
             date_from=date_from,
             date_to=date_to,
+            time_slot=time_slot,
             page=page,
         )
     )
@@ -54,6 +63,8 @@ def dashboard():
             "search": search or "",
             "date_from": date_from or "",
             "date_to": date_to or "",
+            "time_slot": time_slot,
+            "date_preset": date_preset,
         },
     )
 
@@ -71,6 +82,7 @@ def update_anomaly_status(anomaly_id):
         payload.get("status"),
         (payload.get("penaltyReceiptRef") or "").strip(),
         user_row["userId"],
+        manager_zone=user_row["assignedZone"],
     )
 
     if not success:

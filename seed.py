@@ -22,6 +22,7 @@ ROUTE_SEGMENTS = [
     ("Meg-Bole-01", "Meg-Bole 01", "Megenagna"),
     ("Bole-Meg-02", "Bole-Megenagna 02", "Bole"),
     ("Saris-Asko-01", "Saris-Asko 01", "Saris"),
+    ("Asko-Saris-02", "Asko-Saris 02", "Asko"),
     ("TorHailoch-Asko-03", "Tor Hailoch-Asko 03", "Tor Hailoch"),
 ]
 
@@ -39,6 +40,8 @@ DEMO_USERS = [
         "TerminalManager",
         "Megenagna",
     ),
+    ("Selamawit Girma", "s.girma@transit.gov.et", "Manager123!", "TerminalManager", "Bole"),
+    ("Yohannes Bekele", "y.bekele@transit.gov.et", "Manager123!", "TerminalManager", "Saris"),
     ("Meron Tesfaye", "m.tesfaye@transit.gov.et", "Supervisor123!", "Supervisor", None),
     ("Dawit Alemu", "officer@transit.gov.et", "Officer123!", "Officer", None),
 ]
