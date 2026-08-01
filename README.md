@@ -3,7 +3,12 @@
 A USSD-based commuter reporting system for unauthorized transit violations on minibus taxis in Addis Ababa. Commuters report violations via a USSD menu (no smartphone or app required); reports are aggregated into verified anomalies for Terminal Managers to act on, with Supervisor oversight and
 read-only field access for Traffic Police Officers.
 
-Schema documentation: [docs/erd.md](docs/erd.md).
+
+* **Project Demonstration Video:** [Watch the Video Link Here](https://youtu.be/AgeH8x3nqzQ)
+* **Schema documentation:** [docs/erd.md](docs/erd.md)
+* **Software Requirements Specification (SRS):** [Read the SRS Document](https://docs.google.com/document/d/1PKSSGhavbGcwu34jpGCTqUm32Pu8fndm_ppkmLbH_fY/edit?usp=sharing)
+* **Live Public Application:** [Access the Live App Portal](https://ydejene.pythonanywhere.com/)
+
 
 ## Stack
 
